@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block body %}
+    
+
+    <div class="container my-2">
+        <h2>Update your table</h2>
+        <form action="/update/{{myweb.SNo}}" method="POST">
+            <div class="mb-3">
+                <label for="Title" class="form-label">Title</label>
+                <input type="text" class="form-control" name="title" id="Title" value="{{myweb.title}}"  aria-describedby="emailHelp">
+            </div>
+
+            <div class="mb-3">
+                <label for="desc" class="form-label">Description</label>
+                <input type=text" class="form-control" name="desc" id="desc" value="{{myweb.desc}}"  >
+                <div id="emailHelp" class="form-text">We'll never share your desc with anyone else.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+            
+        </form>
+    </div>
+
+
+{% endblock body %}
