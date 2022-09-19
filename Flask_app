@@ -1,0 +1,65 @@
+from flask import Flask , render_template, request, redirect
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MYWEBSITEsqlite.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class mywebsite(db.Model):
+    SNo = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable = False)
+    desc = db.Column(db.String(500), nullable = False)
+    data_created = db.Column(db.DateTime, default= datetime.utcnow)
+
+    def __repr__(self) -> str:
+        return f"{self.SNo} - {self.title}"
+
+
+@app.route('/' , methods = ["GET" , "POST"])
+def hello_world():
+    if request.method == "POST": 
+        title = request.form['title']
+        desc = request.form['desc']
+
+        myweb = mywebsite(title=title , desc=desc)
+        db.session.add(myweb)
+        db.session.commit()
+    allwebsite = mywebsite.query.all()
+
+    return render_template('index.html' , allwebsite = allwebsite)
+
+@app.route('/update/<int:SNo>' , methods = ["GET" , "POST"])
+def update(SNo):
+    if request.method == "POST":
+        title = request.form['title']
+        desc = request.form['desc']
+        myweb = mywebsite.query.filter_by(SNo=SNo).first()
+        myweb.title = title
+        myweb.desc = desc
+
+        db.session.add(myweb)
+        db.session.commit()
+
+        return redirect("/")
+
+    myweb = mywebsite.query.filter_by(SNo=SNo).first()
+    return render_template('update.html' , myweb = myweb)
+
+@app.route('/delete/<int:SNo>')
+def delete(SNo):
+    myweb = mywebsite.query.filter_by(SNo=SNo).first()
+    db.session.delete(myweb)
+    db.session.commit()
+    return redirect("/")
+
+@app.route('/show')
+def hello_world1():
+    allwebsite = mywebsite.query.all()
+    print(allwebsite)
+    return 'show page!'
+
+if __name__ == "__main__":
+    app.run(debug=True , port=5000)
