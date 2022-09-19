@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    <div class="container-fluid my-2">
+        <form action="/" method="POST">
+            <div class="mb-3">
+                <label for="Title" class="form-label">Title</label>
+                <input type="text" class="form-control" name="title" id="Title" aria-describedby="emailHelp">
+            </div>
+
+            <div class="mb-3">
+                <label for="desc" class="form-label">Description</label>
+                <input type=text" class="form-control" name="desc" id="desc">
+                <div id="emailHelp" class="form-text">We'll never share your desc with anyone else.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <div class="container my-3">
+        <h2>Table</h2>
+
+        {% if allwebsite|length==0 %}
+        <div class="alert alert-primary" role="alert">
+            Add your title and description!
+          </div>
+
+        {% else %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">SNo</th>
+                    <th scope="col">title</th>
+                    <th scope="col">desc</th>
+                    <th scope="col">data_created</th>
+                    <th scope="col">check</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for myweb in allwebsite %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{myweb.title}}</td>
+                    <td>{{myweb.desc}}</td>
+                    <td>{{myweb.data_created}}</td>
+                    <td>
+                        <a href="/update/{{myweb.SNo}}" type="button"
+                            class="btn btn-outline-warning btn-sm mx-1">UPDATE</button>
+                            <a href="/delete/{{myweb.SNo}}" type="button"
+                                class="btn btn-outline-danger btn-sm mx-1">DELETE</button>
+
+                    </td>
+                </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+            {% endif %}
+
+    </div>
+
+{% endblock body %}
